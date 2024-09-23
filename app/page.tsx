@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { WindowInstance } from './applications/window/windowmanager';
 import Desktop from './desktop/desktop';
 import BootScreen from './effects/bootscreen';
+import LoginPage from './loginpage';
 import TaskBar from './taskbar';
 
 
@@ -43,15 +44,22 @@ function LoadedView() {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      return await fetch("/api/test", {
-        method: "GET"
-      });
-    };
-    fetchData();
-  }, [])
+  const [user, setUser] = useState(false);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     return await fetch("/api/test", {
+  //       method: "GET"
+  //     });
+  //   };
+  //   fetchData();
+  // }, [])
+  
+  var stupid
+  if (!user) {
+    return (
+      <LoginPage />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -60,7 +68,7 @@ export default function Home() {
       }} />
     );
   }
-  return (
+  return (  
     <LoadedView />
   );
 }
@@ -128,7 +136,7 @@ Baby sized
 ║  '---||  (█   █| |  ║                                                       ║
 ║   |  ||\    _' | |  ║                                                       ║
 ║   | /|||,' -┰' ||   ║                                                       ║
-║   \/ \|        |/   ║                                                       ║
+║   \/ \|      ''|/   ║                                                       ║
 ╠════╧════════════╧═══╣                                                       ║
 ║   TimidestVampire   ║                                                       ║
 ╚═════════════════════╩═══════════════════════════════════════════════════════╝
