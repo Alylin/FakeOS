@@ -58,7 +58,8 @@ export type NewWindow = {
         currentDesktopSize: Size, 
         setWindows: (windows: WindowInstance[]) => void,
         windows: WindowInstance[],
-        windowID: string
+        windowID: string,
+        isCollapsed: boolean
     ) => ReactElement
 }; 
 

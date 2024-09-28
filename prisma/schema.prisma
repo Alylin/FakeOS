@@ -7,12 +7,20 @@ datasource db {
   url      = "mysql://user:password@localhost:3306/TestDatabase"
 }
 
-model TestTableOne {
-  id Int @id
-}
-
 model Users {
-  id Int @id @default(autoincrement());
-  email String @unique;
+  id       Int    @id @default(autoincrement());
+  email    String @unique;
   userName String @unique;
 }
+
+model Files {
+  id Int @id @default(autoincrement());
+  displayName String;
+  createdTime DateTime;
+  lastUpdatedTime DateTime;
+  data FileStream;
+}
+
+// tags
+// parents
+// size

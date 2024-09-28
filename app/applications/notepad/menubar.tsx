@@ -90,7 +90,15 @@ const menus = [
    }
 ];
 
-function MenuItem({ title, shortcut, onClick, notepadData }: { title: string, shortcut: string }) {
+function MenuItem({ 
+  title, 
+  shortcut, 
+  onClick, 
+  notepadData
+}: { 
+  title: string, 
+  shortcut: string
+}) {
    return (
       <button 
          className="text-left pl-10 flex pr-6 w-full hover:bg-green-200"

@@ -9,6 +9,32 @@ import { Position } from '../generic/position';
 import { Size } from '../generic/size';
 import { minimizeWindow, moveToFront, WindowInstance } from './windowmanager';
 
+function fullScreen(
+  desktopSize: {width: number, height: number}, 
+  setSize: (size: Size) => void, 
+  setPosition: (position: Position) => void
+) {
+  setSize({
+    width: desktopSize.width,
+    height: desktopSize.height
+  });
+  setPosition({
+      x: 0,
+      y: 0
+  });
+}
+
+function setSoftPosition(
+  desktopSize: {width: number, height: number}, 
+  position: Position, 
+  setPosition: (position: Position) => void
+) {
+  setPosition({
+    x: Math.max(Math.min(position.x, desktopSize.width-50), 0),
+    y: Math.max(Math.min(position.y, desktopSize.height-50), 0)
+  });
+}
+
 export default function Window({ 
    title, 
    children,
@@ -19,7 +45,9 @@ export default function Window({
    windows,
    windowID,
    icon,
-   isCollapsed
+   isCollapsed,
+   minWidth = 400,
+   minHeight = 400
 }: {
    title: string,
    children: ReactNode,
@@ -30,24 +58,31 @@ export default function Window({
    windows: WindowInstance[],
    windowID: string,
    icon: ReactElement,
-   isCollapsed: boolean
+   isCollapsed: boolean,
+   minWidth?: number,
+   minHeight?: number
 }) {
   const [size, setSize] = useState({
-    width: 500,
-    height: 500
+    width: minWidth,
+    height: minHeight
   });
   const [position, setPosition] = useState<Position>({
     x: 0,
     y: 0
   });
 
-  useEffect(() => {
-      setPosition({
-          x: Math.max(Math.min(position.x, desktopSize.width-50), 0),
-          y: Math.max(Math.min(position.y, desktopSize.height-50), 0)
-      });
-  }, [desktopSize]);
+  const [pastSize, setPastSize] = useState<Size>();
+  const [pastPosition, setPastPosition] = useState<Position>();
 
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  useEffect(() => {
+    if (isFullScreen) {
+      fullScreen(desktopSize, setSize, setPosition);
+      return;
+    }
+    setSoftPosition(desktopSize, position, setPosition);
+  }, [desktopSize]);
 
   const onResize = (event: SyntheticEvent, data: ResizeCallbackData) => {
     const newSize = data.size;
@@ -57,7 +92,6 @@ export default function Window({
 
     let maxWidth = 0;
     let maxHeight = 0;
-
 
     switch (data.handle) {
       case 'se':
@@ -74,7 +108,7 @@ export default function Window({
           x: Math.max(position.x + xChange, 0),
           y: position.y
         });
-        break
+        break;
       case 'n': 
       case 'ne':
         maxWidth = desktopSize.width - position.x;
@@ -83,7 +117,7 @@ export default function Window({
           x: position.x,
           y: Math.max(position.y + yChange, 0)
         });
-        break
+        break;
       case 'nw':
         maxWidth = size.width + position.x;
         maxHeight = size.height + position.y;
@@ -91,7 +125,7 @@ export default function Window({
           x: Math.max(position.x + xChange, 0),
           y: Math.max(position.y + yChange, 0)
         });
-        break
+        break;
       default:
         break;
     }
@@ -128,8 +162,8 @@ export default function Window({
             width={size.width} 
             height={size.height}
             minConstraints={[
-              400,
-              400
+              minWidth,
+              minHeight
             ]}
             onResize={onResize}
             resizeHandles={['se', 'sw', 'ne', 'nw', 'n', 's', 'e', 'w']}
@@ -175,7 +209,7 @@ export default function Window({
             )}
           > 
             <div
-              className="flex flex-col pb-6 text-[13px] absolute shadow-powerful border-solid border-2 border-t-0 border-windowPrimary bg-white" 
+              className="flex flex-col text-[13px] absolute shadow-powerful border-solid border-2 border-t-0 border-windowPrimary bg-white" 
               style={{
                 width: size.width + 'px', 
                 height: size.height + 'px',
@@ -185,10 +219,19 @@ export default function Window({
             >
               <TopBar 
                 title={title} 
-                setSize={setSize} 
-                setPosition={setPosition} 
                 topBarAddon={topBarAddon} 
-                desktopSize={desktopSize} 
+                onFullScreen={() => {
+                  if (!isFullScreen) {
+                    setPastSize(size);
+                    setPastPosition(position);
+                    fullScreen(desktopSize, setSize, setPosition);
+                  }
+                  else if (pastSize && pastPosition) {
+                    setSize(pastSize);
+                    setSoftPosition(desktopSize, pastPosition, setPosition);
+                  }
+                  setIsFullScreen(!isFullScreen);
+                }}
                 onClose={onClose} 
                 onMinimize={() => {
                   minimizeWindow(

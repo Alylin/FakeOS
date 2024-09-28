@@ -1,20 +1,15 @@
 {
-  "css.lint.unknownAtRules": "ignore",
-  "scss.lint.unknownAtRules": "ignore",
-  "eslint.enable": true,
-  "eslint.packageManager": "npm",
-  "eslint.format.enable": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-],
-  "eslint.workingDirectories": [{ "mode": "auto" }],
-  "eslint.options": {
-    "overrideConfigFile": "/Users/ellie/Documents/Code/testagain/notepad2/FakeOS/.eslintrc.json"
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "javascript": "javascript",
+    "html": "HTML"
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+
+ "editor.inlineSuggest.enabled": true,
+  "emmet.triggerExpansionOnTab": true,
+  "tailwindCSS.emmetCompletions": true,
+
+  "editor.quickSuggestions": {
+    "strings": true
   }
 }

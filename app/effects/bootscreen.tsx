@@ -4,7 +4,7 @@ function getBarSegments(percentage: number): React.JSX.Element[] {
     const barSegments = [];
     for(let i = 0; i < 60; i++) {
         barSegments.push(
-            <div className={`h-4 w-0.5 flex-1 ${percentage >= (i / 60) ? 'text-white' : 'text-black'}`}>
+            <div key={`${i}`} className={`h-4 w-0.5 flex-1 ${percentage >= (i / 60) ? 'text-white' : 'text-black'}`}>
                 |
             </div>
         );

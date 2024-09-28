@@ -2,8 +2,8 @@ import './output.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'notepad.exe',
-  description: 'It is kinda like notepad.'
+  title: 'CephlieCo Browser OS',
+  description: '.,,.,...,..,.,,,.,...,'
 }
 
 export default function RootLayout({
@@ -13,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="overflow-hidden">{children}</body>
+      <body className="overflow-hidden bg-[url('/staticy.jpg')] bg-cover bg-center">
+        {children}
+      </body>
     </html>
   )
 }
