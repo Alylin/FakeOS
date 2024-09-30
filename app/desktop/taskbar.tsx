@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { moveToFront, WindowInstance } from "./applications/window/windowmanager";
+import { moveToFront, WindowInstance } from "../applications/window/windowmanager";
 
 function useTime() {
     const [dateAndTime, setDateAndTime] = useState(new Date());
@@ -49,10 +49,7 @@ function Clock() {
         }}
       >
         <div 
-            className={`h-5 w-5 bg-contain mr-2`} 
-            style={{
-                'backgroundImage': `url("${window.icon}")`
-            }}
+            className={`h-5 w-5 bg-contain mr-2 ${window.icon}`} 
         />
         {window.windowDisplayName}
       </button>
@@ -72,8 +69,8 @@ export default function TaskBar({
             Lets Go!
             </button>
             {
-                windows.map((window, index) => 
-                    <ApplicationTab window={window} windows={windows} setWindows={setWindows} zIndex={windows.length - index} />
+                windows.map((window, index) => // test108 shouldn't be using index long-term. 
+                    <ApplicationTab key={index} window={window} windows={windows} setWindows={setWindows} zIndex={windows.length - index} />
                 )
             }
             <div className="flex-1"/>

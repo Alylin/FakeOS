@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import {Editor, EditorState, ContentState, getDefaultKeyBinding} from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { setSelectToEnd } from '../generic/editorutilities';
-import { Size } from "../generic/size";
+import { Size } from "../../utility/size";
 import { closeWindow, NewWindow, WindowInstance } from "../window/windowmanager";
 
 export type NotepadFileDataEntry = {
@@ -284,8 +284,7 @@ export default function Notepad({ desktopSize, setWindows, windows, windowID, is
     setWindows: (windows: WindowInstance[]) => void, 
     windows: WindowInstance[],
     windowID: string,
-    isCollapsed: boolean,
-    icon: string
+    isCollapsed: boolean
 }) {
     let key = useRef(1);
     const getNextKey = () => {
@@ -326,7 +325,7 @@ export default function Notepad({ desktopSize, setWindows, windows, windowID, is
                 <div 
                     className={`h-5 w-5 bg-contain`} 
                     style={{
-                        'backgroundImage': `url("${icon}")`
+                        'backgroundImage': `url("/icons/notepad.svg")`
                     }}
                 />
             }
@@ -391,7 +390,7 @@ export function getNotepadData(): NewWindow {
     return {
         applicationID: 'notepad', 
         windowDisplayName: 'Notepad',
-        icon: '/icontest.svg',
+        icon: 'bg-[url("/icons/notepad.svg")]',
         render: (
             currentDesktopSize: Size, 
             setWindows: (windows: WindowInstance[]) => void, 
@@ -407,7 +406,6 @@ export function getNotepadData(): NewWindow {
                     windowID={windowID}
                     key={windowID}
                     isCollapsed={isCollapsed}
-                    icon="/icontest.svg"
                 />
             );
         }

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Size } from "../generic/size";
+import { Size } from "../../utility/size";
 import Window from "../window/window";
 import { closeWindow, NewWindow, WindowInstance } from "../window/windowmanager";
 import { MdPause, MdPlayArrow, MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import parseAudioMetadata from "parse-audio-metadata";
+import ProgressBar from "./progressbar";
 
 function getTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
@@ -37,7 +38,7 @@ function getSongTitle(metaData: metaData | null) {
   else if (metaData.title) {
     return metaData.title;
   }
-  return 'Unknown Song';
+  return 'Unknown Audio File';
 }
 
 export default function AudioPlayer(
@@ -58,7 +59,6 @@ export default function AudioPlayer(
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [metaData, setMetaData] = useState<metaData | null>(null);
-  const progressBar = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const filename = '03ImposterSyndrome.mp3';
@@ -122,7 +122,7 @@ export default function AudioPlayer(
           <div 
               className={`h-5 w-5 bg-contain`} 
               style={{
-                  'backgroundImage': `url("/audioplayer.svg")`
+                  'backgroundImage': `url("/icons/audioplayer.svg")`
               }}
           />
         }
@@ -130,35 +130,12 @@ export default function AudioPlayer(
         minWidth={400}
         minHeight={120}
     >
-      <div className="p-1 px-3 h-full">
+      <div className="p-1 px-3 h-full bg-white">
         <div className="font-bold text-ellipsis w-full h-5 text-center">
           {getSongTitle(metaData)}
         </div>
-        <div className="flex w-full h-8 bg-white text-right items-center content-center">
-          <div className="flex-1 py-2 pr-0">
-            <div 
-              className="h-2 bg-neutral-400 w-full group cursor-pointer"
-              ref={progressBar}
-              onClick={(clickEvent: React.MouseEvent) => {
-                if (currentAudio && progressBar.current) { 
-                  const bounds = progressBar.current.getBoundingClientRect();
-                  const distanceAlongXAxis = clickEvent.clientX - bounds.left;
-                  const percentageAlongXAxis = distanceAlongXAxis / bounds.width;
-                  const positionInSong = duration * percentageAlongXAxis;
-                  currentAudio.currentTime = positionInSong;
-                }
-              }}
-            >
-              <div
-                className="h-2 bg-[#546656] relative" 
-                style={{
-                  width: `${Math.round(currentTime/duration*1000)/10}%`
-                }}
-              >
-                  <div className="w-2 h-0 group-hover:h-4 bg-windowPrimary absolute right-0 -top-1 rounded-full" />
-              </div>
-            </div>
-          </div>
+        <div className="flex w-full h-8 text-right items-center content-center">
+          <ProgressBar currentAudio={currentAudio} currentTime={currentTime} duration={duration} />
           <div className="w-20">
             {`${currentTimeFormatted} - ${durationFormatted}`}
           </div>
@@ -200,7 +177,7 @@ export function getAudioPlayerData(): NewWindow {
   return {
       applicationID: 'audioplayer', 
       windowDisplayName: 'Audio Player',
-      icon: '/icontest.svg',
+      icon: "bg-[url('/icons/audioplayer.svg')]",
       render: (
           currentDesktopSize: Size, 
           setWindows: (windows: WindowInstance[]) => void, 

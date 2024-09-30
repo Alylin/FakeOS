@@ -6,7 +6,7 @@ import { WindowInstance } from './applications/window/windowmanager';
 import Desktop from './desktop/desktop';
 import BootScreen from './effects/bootscreen';
 import LoginPage from './loginpage';
-import TaskBar from './taskbar';
+import TaskBar from './desktop/taskbar';
 
 
 function LoadedView() {

@@ -5,8 +5,8 @@ import 'draft-js/dist/Draft.css';
 import { Resizable, ResizeCallbackData } from 'react-resizable'
 import { DraggableCore } from 'react-draggable';
 import TopBar from './topbar';
-import { Position } from '../generic/position';
-import { Size } from '../generic/size';
+import { Position } from '../../utility/position';
+import { Size } from '../../utility/size';
 import { minimizeWindow, moveToFront, WindowInstance } from './windowmanager';
 
 function fullScreen(

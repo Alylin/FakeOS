@@ -1,0 +1,2 @@
+npx tailwindcss -i ./app/globals.css -o ./app/output.css --watch; 
+npm run dev
