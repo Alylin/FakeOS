@@ -1,0 +1,68 @@
+/*
+Stage Left
+╔══════════════════════════════╦═══════════════════════════════════════════════════════════════════════════╗
+║     ___   _,----˾___         ║                                                                           ║
+║    /   ˉ˞ˉ          ""=_     ║     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do       ║
+║    \ /       _˾˾---˾_   \    ║   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a   ║
+║    |   |  |/         \   |   ║  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip  ║
+║ ___┴__|  |' ____  ____|  |   ║     ex ea commodo consequat. Duis aute irure dolor in reprehenderit...    ║
+║  '--˾__|  | ( █     █)|  |   ║                                                                           ║
+║   |   ✿ | |       '  ,|  |   ║     In voluptate velit esse cillum dolore eu fugiat nulla pariatur.       ║
+║   |     | |\_    -  / | |    ║                                                                           ║
+║  |   |  | \ |ˉˉ'--'ˉ  | |    ║    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui      ║
+║  |   |   \ ||    |    | |    ║                officia deserunt mollit anim id est laborum.               ║
+║  \  |   / \\      ˭'--//     ║                                                                           ║
+║   ',_ /                 \    ║                                                                           ║
+╠═════╧════════════════════╧═══╣                                                                           ║
+║        TimidestVampire       ║                                                                           ║
+╚══════════════════════════════╩═══════════════════════════════════════════════════════════════════════════╝
+
+forward
+╔══════════════════════════════╦═══════════════════════════════════════════════════════════════════════════╗
+║     ___   _,----˾___         ║                                                                           ║
+║    /   ˉ˞ˉ          ""=_     ║     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do       ║
+║    \ /       _˾˾---˾_   \    ║   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a   ║
+║    |   |  |/         \   |   ║  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip  ║
+║ ___┴__|  |' ____  ____|  |   ║     ex ea commodo consequat. Duis aute irure dolor in reprehenderit...    ║
+║  '--˾__|  | (█     █ )|  |   ║                                                                           ║
+║   |   ✿ | |       '  ,|  |   ║     In voluptate velit esse cillum dolore eu fugiat nulla pariatur.       ║
+║   |     | |\_    -  / | |    ║                                                                           ║
+║  |   |  | \ |ˉˉ'--'ˉ  | |    ║    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui      ║
+║  |   |   \ ||    |    | |    ║                officia deserunt mollit anim id est laborum.               ║
+║  \  |   / \\      ˭'--//     ║                                                                           ║
+║   ',_ /                 \    ║                                                                           ║
+╠═════╧════════════════════╧═══╣                                                                           ║
+║        TimidestVampire       ║                                                                           ║
+╚══════════════════════════════╩═══════════════════════════════════════════════════════════════════════════╝
+
+Seriously?
+╔══════════════════════════════╦═══════════════════════════════════════════════════════════════════════════╗
+║     ___   _,----˾___         ║                                                                           ║
+║    /   ˉ˞ˉ          ""=_     ║     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do       ║
+║    \ /       _˾˾---˾_   \    ║   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim a   ║
+║    |   |  |/         \   |   ║  minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip  ║
+║ ___┴__|  |' ____  ؄|  |   ║     ex ea commodo consequat. Duis aute irure dolor in reprehenderit...    ║
+║  '--˾__|  | (█     █ )|  |   ║                                                                           ║
+║   |   ✿ | |       '  ,|  |   ║     In voluptate velit esse cillum dolore eu fugiat nulla pariatur.       ║
+║   |     | |\_    -  / | |    ║                                                                           ║
+║  |   |  | \ |ˉˉ'--'ˉ  | |    ║    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui      ║
+║  |   |   \ ||    |    | |    ║                officia deserunt mollit anim id est laborum.               ║
+║  \  |   / \\      ˭'--//     ║                                                                           ║
+║   ',_ /                 \    ║                                                                           ║
+╠═════╧════════════════════╧═══╣                                                                           ║
+║        TimidestVampire       ║                                                                           ║
+╚══════════════════════════════╩═══════════════════════════════════════════════════════════════════════════╝
+
+Baby sized
+╔═════════════════════╦═══════════════════════════════════════════════════════╗     
+║     ,--_,------.    ║                                                       ║
+║    ,'   _,----. \   ║                                                       ║
+║ ___|_ |/ __  __| |  ║                                                       ║
+║  '---||  (█   █| |  ║                                                       ║
+║   |  ||\    _' | |  ║                                                       ║
+║   | /|||,' -┰' ||   ║                                                       ║
+║   \/ \|      ''|/   ║                                                       ║
+╠════╧════════════╧═══╣                                                       ║
+║   TimidestVampire   ║                                                       ║
+╚═════════════════════╩═══════════════════════════════════════════════════════╝
+*/
