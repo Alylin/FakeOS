@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Size } from "../../utility/size";
-import Window from "../window/window";
-import { closeWindow, NewWindow, WindowInstance } from "../window/windowmanager";
+import Window from "../../os/windows/window";
+import { closeWindow, NewWindow, WindowInstance } from "../../os/windows/windowmanager";
 import { MdPause, MdPlayArrow, MdSkipNext, MdSkipPrevious } from "react-icons/md";
 import parseAudioMetadata from "parse-audio-metadata";
 import ProgressBar from "./progressbar";
@@ -110,28 +110,29 @@ export default function AudioPlayer(
 
   return (
     <Window
-        title="Audio Player" 
-        desktopSize={desktopSize} 
-        onClose={() => {
-            closeWindow(windows, setWindows, windowID);
-        }} 
-        setWindows={setWindows}
-        windows={windows}
-        windowID={windowID}
-        icon={
-          <div 
-              className={`h-5 w-5 bg-contain`} 
-              style={{
-                  'backgroundImage': `url("/icons/audioplayer.svg")`
-              }}
-          />
-        }
-        isCollapsed={isCollapsed}
-        minWidth={400}
-        minHeight={120}
+      title="Audio Player" 
+      desktopSize={desktopSize}
+      setWindows={setWindows}
+      windows={windows}
+      windowID={windowID}
+      icon={
+        <div 
+          className={`h-5 w-5 bg-contain`} 
+          style={{
+            'backgroundImage': `url("/icons/audioplayer.svg")`
+          }}
+        />
+      }
+      isCollapsed={isCollapsed}
+      minWidth={400}
+      minHeight={120}
+      defaultSize={{
+        width: 400,
+        height: 120
+      }}
     >
       <div className="p-1 px-3 h-full bg-white">
-        <div className="font-bold text-ellipsis w-full h-5 text-center">
+        <div className="font-bold text-ellipsis w-full h-5 text-center overflow-hidden text-nowrap">
           {getSongTitle(metaData)}
         </div>
         <div className="flex w-full h-8 text-right items-center content-center">

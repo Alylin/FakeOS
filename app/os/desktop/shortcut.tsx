@@ -1,5 +1,5 @@
-import { Position } from "../utility/position";
-import { NewWindow, openWindow, WindowInstance } from "../applications/window/windowmanager";
+import { Position } from "../../utility/position";
+import { NewWindow, openWindow, WindowInstance } from "../windows/windowmanager";
 
 export default function ShortCut({
   applicationData,
@@ -20,11 +20,11 @@ export default function ShortCut({
       }}
       className="absolute w-20 flex items-center flex-col overflow-hidden"
       onClick={() => {
-          openWindow(
-              windows,
-              setWindows,
-              applicationData
-          );
+        openWindow(
+          windows,
+          setWindows,
+          applicationData
+        );
       }}
     >
         <div className={`${applicationData.icon} bg-contain bg-center bg-no-repeat h-12 w-12`} />

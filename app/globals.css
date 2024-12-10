@@ -10,3 +10,22 @@
     text-shadow: 0px 0px 4px #000000;
 }
 
+::-webkit-scrollbar {
+  width: 100px
+}
+
+::-webkit-scrollbar-track {
+  background-color: blue;
+}
+
+/* * {
+  background-color:white !important;
+  border-style: none;
+  background-image: none !important;
+  color: black !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: black;
+} */

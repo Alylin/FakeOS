@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import { WindowInstance } from './applications/window/windowmanager';
-import Desktop from './desktop/desktop';
+import { WindowInstance } from './os/windows/windowmanager';
+import Desktop from './os/desktop/desktop';
 import BootScreen from './bootscreen';
-import TaskBar from './desktop/taskbar';
+import TaskBar from './os/desktop/taskbar';
 import EffectWrapper from './effects/effect';
 
 function LoadedView() {

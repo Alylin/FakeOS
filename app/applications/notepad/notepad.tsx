@@ -1,12 +1,12 @@
 import { Footer } from "./footer";
 import MenuBar from "./menubar";
-import Window from "../window/window";
+import Window from "../../os/windows/window";
 import { useEffect, useState, useRef } from 'react';
 import {Editor, EditorState, ContentState, getDefaultKeyBinding} from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { setSelectToEnd } from '../generic/editorutilities';
+import { setSelectToEnd } from '../../utility/editorutilities';
 import { Size } from "../../utility/size";
-import { closeWindow, NewWindow, WindowInstance } from "../window/windowmanager";
+import { closeWindow, NewWindow, WindowInstance } from "../../os/windows/windowmanager";
 
 export type NotepadFileDataEntry = {
     displayName: string;
@@ -313,10 +313,7 @@ export default function Notepad({ desktopSize, setWindows, windows, windowID, is
     return (
         <Window
             title={`${'test'}.dnd - Notepad`} 
-            desktopSize={desktopSize} 
-            onClose={() => {
-                closeWindow(windows, setWindows, windowID);
-            }} 
+            desktopSize={desktopSize}
             topBarAddon={<MenuBar notepadData={data} />}
             setWindows={setWindows}
             windows={windows}

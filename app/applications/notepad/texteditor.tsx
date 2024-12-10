@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import {Editor, EditorState, DraftHandleValue, getDefaultKeyBinding} from 'draft-js';
-import { setSelectToEnd } from '../../generic/editorutilities';
+import { setSelectToEnd } from '../../utility/editorutilities';
 
 type SyntheticKeyboardEvent = React.KeyboardEvent<{}>;
 type textEditorProps = {

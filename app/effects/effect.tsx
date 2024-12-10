@@ -1,4 +1,5 @@
 import { useEffect, useState, ReactNode } from "react";
+import randomIntFromInterval from "../utility/random";
 
 function generateFilter(amount: number) {
   return (
@@ -6,13 +7,17 @@ function generateFilter(amount: number) {
   );
 }
 
-const animationFrames: { 
+const glitchAnimationFrames: { 
   duration: number, 
   filter: string, 
   onStart?: () => void 
 }[] = [
   {
-    duration: -1,
+    duration: randomIntFromInterval(100000, 19970131),
+    filter: ''
+  },
+  {
+    duration: 100,
     filter: ''
   },
   {
@@ -47,34 +52,66 @@ const animationFrames: {
     duration: 200,
     filter: generateFilter(7)
   }
-]
+];
 
-function randomIntFromInterval(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+function getNextAnimationFrameId(
+  animationFrames: {duration: number, onStart?: () => void}[],
+  currentAnimationFrameId: number,
+  isLooping: boolean
+) {
+  if (isLooping) {
+    return (currentAnimationFrameId + 1) % animationFrames.length;
+  }
+  if (currentAnimationFrameId < animationFrames.length-1) {
+    return currentAnimationFrameId + 1;
+  }
+  return -1;
 }
 
-function useAnimationFrames(): number {
+export function useAnimationFrames(
+  animationFrames: {duration: number, onStart?: () => void}[],
+  isLooping: boolean
+): number {
   const [animationFrameId, setAnimationFrameId] = useState(0);
   useEffect(() => {
+    if (animationFrames.length === 0) {
+      return;
+    }
     const animationFrame = animationFrames[animationFrameId];
+    if (!animationFrame) {
+
+      return;
+    }
     setTimeout(() => {
-      animationFrame.onStart?.();
-      setAnimationFrameId((animationFrameId + 1) % animationFrames.length);
-    }, animationFrame.duration > 0 ? animationFrame.duration : randomIntFromInterval(100000, 19970131));
-  }, [animationFrameId]);
+      const nextAnimationFrameId = getNextAnimationFrameId(animationFrames, animationFrameId, isLooping);
+      if (nextAnimationFrameId >= 0) {
+        const nextAnimationFrame = animationFrames[animationFrameId];
+        nextAnimationFrame.onStart?.()
+      }
+      setAnimationFrameId(nextAnimationFrameId);
+    }, animationFrame.duration);
+  }, [animationFrameId, animationFrames]);
+
+  useEffect(() => {
+    setAnimationFrameId(0);
+  }, [animationFrames])
   return animationFrameId;  
 }
 
-export default function EffectWrapper({
+export default function GlitchWrapper({
   children
 }: {
   children: ReactNode
 }) {
-  const frameID = useAnimationFrames();
+  
+  // filter = filter.replace(/(\r\n|\n|\r)/gm, "");
+
+
+  const frameID = useAnimationFrames(glitchAnimationFrames, true);
   return (
     <div
       style={{
-        filter: animationFrames[frameID].filter
+        filter: glitchAnimationFrames[frameID].filter
       }}
     >
       {children}

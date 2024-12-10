@@ -1,2 +1,5 @@
 npx tailwindcss -i ./app/globals.css -o ./app/output.css --watch; 
 npm run dev
+
+// updates database to reflect schema.
+npx prisma migrate dev --name init

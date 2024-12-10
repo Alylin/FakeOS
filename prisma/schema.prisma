@@ -7,20 +7,13 @@ datasource db {
   url      = "mysql://user:password@localhost:3306/TestDatabase"
 }
 
-model Users {
-  id       Int    @id @default(autoincrement());
-  email    String @unique;
-  userName String @unique;
+model Folder {
+  id              Int       @id @default(autoincrement())
+  displayName     String
+  path            String    
+  createdAt       DateTime  @default(now())
+  lastUpdatedTime DateTime  @updatedAt
+  parentId        Int?
+  parent          Folder?   @relation("ParentChildren", fields: [parentId], references: [id])
+  children        Folder[]  @relation("ParentChildren")
 }
-
-model Files {
-  id Int @id @default(autoincrement());
-  displayName String;
-  createdTime DateTime;
-  lastUpdatedTime DateTime;
-  data FileStream;
-}
-
-// tags
-// parents
-// size

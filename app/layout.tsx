@@ -13,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="overflow-hidden bg-[url('/staticy.jpg')] bg-cover bg-center">
+      <body 
+        className="overflow-hidden bg-black bg-repeat bg-center"
+      >
         {children}
       </body>
     </html>

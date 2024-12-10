@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Dropdown from "../generic/dropdown";
+import Dropdown from "../../reusableui/dropdown";
 import { NotepadFileDataEntry, NotepadFileData } from './notepad';
 
 function download(filename = 'export.txt', text: string) {
@@ -93,17 +93,17 @@ const menus = [
 function MenuItem({ 
   title, 
   shortcut, 
-  onClick, 
-  notepadData
+  onClick
 }: { 
   title: string, 
-  shortcut: string
+  shortcut: string,
+  onClick: () => void
 }) {
    return (
       <button 
          className="text-left pl-10 flex pr-6 w-full hover:bg-green-200"
          onClick={() => {
-            onClick(notepadData);
+            onClick();
          }}
       >
          <div className="flex-1">
@@ -116,7 +116,7 @@ function MenuItem({
    );
 }
 
-function Menu({ text, menuItems, notepadData }: { text: string, menuItems: { title: string, shortcut: string }[] }) {
+function Menu({ text, menuItems, notepadData }: { text: string, menuItems: { title: string, shortcut: string, onClick?: (any: any) => void }[] }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -143,8 +143,9 @@ function Menu({ text, menuItems, notepadData }: { text: string, menuItems: { tit
                   title={menuItem.title} 
                   shortcut={menuItem.shortcut} 
                   key={menuItem.title} 
-                  onClick={menuItem.onClick} 
-                  notepadData={notepadData}
+                  onClick={() => {
+                    menuItem.onClick?.(notepadData)
+                  }} 
                />
             )}
         </div>

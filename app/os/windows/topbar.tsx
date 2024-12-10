@@ -1,10 +1,10 @@
 import { AiOutlineClose, AiOutlineLine } from 'react-icons/ai';
-import { LiaSquare } from 'react-icons/lia';
 import { ReactElement, ReactNode } from 'react';
 
 export default function TopBar({
     title,
     topBarAddon,
+    isFullScreen,
     onFullScreen,
     onClose,
     icon,
@@ -12,6 +12,7 @@ export default function TopBar({
 }: {
     title: string,
     topBarAddon?: ReactNode,
+    isFullScreen: boolean,
     onMinimize: () => void,
     onFullScreen: () => void,
     onClose: () => void,
@@ -29,7 +30,7 @@ export default function TopBar({
                     {icon}
                 </div>
                 <div 
-                  className="p-1 py-2 select-none"
+                  className="p-1 select-none overflow-ellipsis text-nowrap h-full"
                   id="movingHandle"
                 >
                     {title}
@@ -48,7 +49,11 @@ export default function TopBar({
                     className="w-[51px] h-full flex items-center justify-center text-center hover:bg-[#546656] transition-colors"
                     onClick={onFullScreen}
                 >
-                    <LiaSquare className="w-5 h-5" />
+                  {isFullScreen ? 
+                    <span className="w-5 h-5 bg-[url('/icons/unfullscreen.svg')]" />
+                    :
+                    <span className="w-5 h-5 bg-[url('/icons/fullscreen.svg')]" />
+                  }
                 </button>
                 <button
                     className="w-[51px] h-full flex items-center justify-center hover:text-white hover:bg-[#E81123] transition-colors"
