@@ -14,7 +14,7 @@ export default function Dropdown({
    onClose: () => void, 
    targetElement: RefObject<Element>, 
    children: ReactNode,
-   isAbove?: boolean,
+   isAbove?: boolean, 
    position?: Position | undefined
 }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -66,13 +66,13 @@ export default function Dropdown({
   }
 
   return ReactDOM.createPortal(
-      <div
-         className="dropdown z-10"
-         ref={dropdownRef}
-         style={styles}
-      >
-         {children}
-      </div>,
-      document.body
+    <div
+     className="dropdown z-10"
+     ref={dropdownRef}
+     style={styles}
+    >
+     {children}
+    </div>,
+    document.body
   );
 };

@@ -86,7 +86,7 @@ export async function getFolderDataById(id: number): Promise<{data: FolderData}>
   return json;
 }
 
-// returns the folder's parent's id.
+// returns the folder's parent's id?
 export async function deleteFolder(id: number) {
   const response = await fetch(`/api/folder/${id}/delete`, {
     method: 'POST',
@@ -95,7 +95,7 @@ export async function deleteFolder(id: number) {
   // return json;
 }
 
-// returns the new folder's id.
+// returns the new folder's id?
 export async function createFolder(parentId: number, folderName: string): Promise<{data: FolderData}> {
   const response = await fetch('/api/folder', {
     method: 'POST',

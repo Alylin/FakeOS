@@ -3,5 +3,5 @@ export type FolderData = {
   displayName: string,
   children:    FolderData[],
   parentId:    number,
-  path:        string
+  // path:        string
 };

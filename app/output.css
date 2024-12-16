@@ -672,6 +672,10 @@ video {
   margin-right: 0.5rem;
 }
 
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -682,6 +686,10 @@ video {
 
 .table {
   display: table;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-0 {
@@ -832,10 +840,6 @@ video {
   width: 100vw;
 }
 
-.w-10 {
-  width: 2.5rem;
-}
-
 .min-w-12 {
   min-width: 3rem;
 }
@@ -852,8 +856,12 @@ video {
   min-width: 2px;
 }
 
-.min-w-4 {
-  min-width: 1rem;
+.min-w-8 {
+  min-width: 2rem;
+}
+
+.min-w-7 {
+  min-width: 1.75rem;
 }
 
 .max-w-12 {
@@ -1172,6 +1180,11 @@ video {
   background-color: rgb(163 163 163 / var(--tw-bg-opacity));
 }
 
+.bg-neutral-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(115 115 115 / var(--tw-bg-opacity));
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1185,11 +1198,6 @@ video {
 .bg-windowPrimary {
   --tw-bg-opacity: 1;
   background-color: rgb(35 66 52 / var(--tw-bg-opacity));
-}
-
-.bg-green-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 101 52 / var(--tw-bg-opacity));
 }
 
 .bg-\[url\(\"\/icons\/notepad\.svg\"\)\] {
@@ -1531,6 +1539,38 @@ video {
   outline-width: 1px;
   outline-color: black;
 } */
+
+.selection\:bg-none *::-moz-selection {
+  background-image: none;
+}
+
+.selection\:bg-none *::selection {
+  background-image: none;
+}
+
+.selection\:text-inherit *::-moz-selection {
+  color: inherit;
+}
+
+.selection\:text-inherit *::selection {
+  color: inherit;
+}
+
+.selection\:bg-none::-moz-selection {
+  background-image: none;
+}
+
+.selection\:bg-none::selection {
+  background-image: none;
+}
+
+.selection\:text-inherit::-moz-selection {
+  color: inherit;
+}
+
+.selection\:text-inherit::selection {
+  color: inherit;
+}
 
 .last\:border-b-0:last-child {
   border-bottom-width: 0px;

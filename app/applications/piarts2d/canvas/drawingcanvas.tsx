@@ -146,29 +146,31 @@ export default function Canvas({
       }}
       ref={canvas}
       onMouseDown={(event) => {
-        if (canvas.current) {
-          const logicalPoint = getLogicalPosition(
-            event, 
-            canvas.current.getBoundingClientRect(), 
-            zoomLevel
-          );
-          tool.onMouseDown(
-            logicalPoint,
-            previousPoint, 
-            color,
-            radius,
-            (workingLayer, commitToCanvas) => {
-              if (commitToCanvas) {
-                onChange(workingLayer);
-                return;
-              }
-              onTemporaryChange(workingLayer);
-            },
-            workingLayer,
-            imageData,
-            isDrawing
-          )
-        }
+        window.requestAnimationFrame(() => {
+          if (canvas.current) {
+            const logicalPoint = getLogicalPosition(
+              event, 
+              canvas.current.getBoundingClientRect(), 
+              zoomLevel
+            );
+            tool.onMouseDown(
+              logicalPoint,
+              previousPoint, 
+              color,
+              radius,
+              (workingLayer, commitToCanvas) => {
+                if (commitToCanvas) {
+                  onChange(workingLayer);
+                  return;
+                }
+                onTemporaryChange(workingLayer);
+              },
+              workingLayer,
+              imageData,
+              isDrawing
+            )
+          }
+        });
         setIsDrawing(true);
       }}
     />

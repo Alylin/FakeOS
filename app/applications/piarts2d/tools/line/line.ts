@@ -1,6 +1,6 @@
 import { Position } from "@/app/utility/position";
-import { Size } from "@/app/utility/size";
-import { cloneImage, getPixelsBetweenPoints, setPixelColor } from "../../utility";
+import { getPixelsBetweenPoints, setPixelColor } from "../../utility";
+import { previewBrush } from "../brushpreview";
 import { Tool } from "../tool";
 
 let point1: Position | null;
@@ -30,6 +30,7 @@ function paint(
   hexColor: string,
   radius: number,
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+  image: ImageData,
   workingLayer: ImageData,
   saveToUndoStack: boolean
 ) {
@@ -37,9 +38,22 @@ function paint(
     const image = paintLineOrPoint(radius, logicalPoint, hexColor, point1, workingLayer);
     onChange(image, saveToUndoStack);
   }
+  else {
+    onChange(
+      previewBrush(
+        logicalPoint,
+        radius,
+        image,
+        workingLayer
+      ), 
+      false
+    );
+  }
 };
 
 const line: Tool = {
+  id: 'line',
+  displayName: 'LINE',
   onMouseMove: (
     logicalPoint: Position, 
     previousPoint: Position | null, 
@@ -54,6 +68,7 @@ const line: Tool = {
       hexColor,
       radius,
       onChange,
+      imageData,
       workingLayer,
       false
     );
@@ -75,6 +90,7 @@ const line: Tool = {
       hexColor,
       radius,
       onChange,
+      imageData,
       workingLayer,
       true
     );

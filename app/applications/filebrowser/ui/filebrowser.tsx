@@ -1,13 +1,14 @@
-import { closeWindow, NewWindow, openWindow, WindowInstance } from "@/app/os/windows/windowmanager";
+import { NewWindow, openWindow, WindowInstance } from "@/app/os/windows/windowmanager";
 import { Position } from "@/app/utility/position";
 import { Size } from "@/app/utility/size";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
-import { MdUndo } from "react-icons/md";
-import Window from "../../os/windows/window";
-import { createFolder, deleteFolder, getFolderDataById, getFolderDataByPath, renameFolder } from "./datalayer";
-import { FolderData } from "./types";
-import { RightClickMenu } from "./rightclickmenu";
+import Window from "../../../os/windows/window";
+import { createFolder, deleteFolder, getFolderDataById, renameFolder } from "../datalayer";
+import { FolderData } from "../types";
+import { RightClickMenu } from "../../../reusableui/rightclickmenu";
+import EditableText from "@/app/reusableui/editabletext";
+import NavigationBar from "./navigationbar";
 
 function FolderEntry({
   displayName,
@@ -32,18 +33,16 @@ function FolderEntry({
   const [dropdownPosition, setDropdownPosition] = useState<Position>();
   const buttonRef = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
-  const nameFieldRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState(displayName);
   return (
     <>
       <tr 
-        tabIndex={0}
         className="h-5 w-full border-b cursor-pointer border-neutral-300 whitespace-nowrap even:bg-neutral-50 odd:bg-white"
         ref={buttonRef}
-        onDoubleClick={(event) => {
+        onDoubleClick={() => {
           onOpen?.();
         }}
-        onClick={(event) => {
+        onClick={() => {
           setIsOpen(false);
         }}
         onContextMenu={(event) => {
@@ -52,7 +51,7 @@ function FolderEntry({
           setDropdownPosition({x: event.pageX, y: event.pageY})
         }}
       >
-        <td className="w-5 pl-2 pr-1">
+        <td className="w-6 pl-2 pr-1">
           <div 
             className={`h-4 w-4 bg-contain bg-center`} 
             style={{
@@ -61,16 +60,13 @@ function FolderEntry({
           />
         </td>
         <td className="pr-2 border-r border-neutral-300">
-          <input 
-            type="text" 
-            value={name} 
-            onChange={(event) => {
-              setName(event.target.value);
+          <EditableText 
+            value={name}
+            isEditing={isEditing}
+            onValueChanged={(newName) => {
+              setName(newName);
             }}
-            readOnly={!isEditing} 
-            ref={nameFieldRef}
-            className="outline-none w-full cursor-pointer"
-            onBlur={() => {
+            onCommitChanges={() => {
               setIsEditing(false);
               renameFolder(id, name).then(() => {
                 invalidateData();
@@ -109,16 +105,9 @@ function FolderEntry({
             displayName: 'Rename',
             hotkey: '⌘+R',
             onClick: () => {
-              if (nameFieldRef.current) {
-                nameFieldRef.current.focus();
-                setIsEditing(true);
-              }
+              setIsEditing(true);
             }
           },
-          // {
-          //   displayName: 'Copy',
-          //   hotkey: '⌘+C'
-          // },
           {
             displayName: 'Delete',
             hotkey: '⌘+D',
@@ -206,7 +195,7 @@ function FileList({
     >
       <table className="border-separate border-spacing-0 text-left w-full">
         <tr className="z-10 h-5">
-          <th className="min-w-6 border-b border-neutral-500 bg-neutral-200 pr-1 sticky top-0" />
+          <th className="min-w-7 border-b border-neutral-500 bg-neutral-200 pr-1 sticky top-0" />
           <th className="sticky border-b top-0 bg-neutral-200 whitespace-nowrap w-full px-2 border-r border-neutral-500">
             Name
           </th>
@@ -246,81 +235,6 @@ function FileList({
   );
 }
 
-function PathField({path, setFolderData}: {path: string, setFolderData: (data: FolderData) => void}) {
-  const [tempPath, setPath] = useState('');
-  useEffect(() => {
-    setPath(path);
-  }, [path]);
-
-  return (
-    <input 
-      className="bg-white text-black w-full px-2 outline-neutral-700 outline-1 outline" 
-      type="text"
-      onChange={(event) => {
-        setPath(event.target.value);
-      }}
-      onKeyUp={(event) => {
-        if (event.code === 'Enter') {
-          getFolderDataByPath(tempPath).then((response) => {
-            if (response.data) {
-              setFolderData(response.data);
-            }
-          });
-        }
-      }}
-      onBlur={() => {
-        setPath(path);
-      }}
-      value={tempPath}
-    />
-  );
-}
-
-function BackButton({
-  parentId,
-  onSetFolderId
-}: {
-  parentId: number | undefined,
-  onSetFolderId: (id: number) => void
-}) {
-  const isDisabled = !parentId;
-  return (
-    <button 
-      className="w-6 h-6 text-black flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
-      disabled={isDisabled}
-      onClick={() => {
-        if (parentId) {
-          onSetFolderId(parentId);
-        }
-      }}
-    >
-      <MdUndo size={16} />
-    </button>
-  )
-}
-
-function TopBar({
-  folderData, 
-  setFolderData,
-  onSetFolderId
-}: {
-  folderData: FolderData | null, 
-  setFolderData: (data: FolderData) => void,
-  onSetFolderId: (id: number) => void
-}) {
-  return (
-    <div className="w-full h-8 bg-neutral-200 flex items-center px-2">
-      <BackButton parentId={folderData?.parentId} onSetFolderId={onSetFolderId} />
-      <div className="flex-1 flex items-center justify-center ml-2">
-        <PathField 
-          path={folderData?.path || 'Loading or error I guess?'} 
-          setFolderData={setFolderData} 
-        />
-      </div>
-    </div>
-  );
-}
-
 function FileBrowser(
   { 
     desktopSize, 
@@ -342,7 +256,7 @@ function FileBrowser(
   const [folderData, setFolderData] = useState<FolderData | null>(null);
   const [dataIsValid, setDataIsValid] = useState(false);
 
-  useEffect(() => { // test108 we need a way to tell this that the data is invalid. 
+  useEffect(() => {
     if (currentFolderId === folderData?.id && dataIsValid) {
       return;
     }
@@ -352,12 +266,6 @@ function FileBrowser(
       setDataIsValid(true);
     });
   }, [currentFolderId, dataIsValid]);
-
-  // useEffect(() => {
-  //   if (folderData) {
-  //     setCurrentFolderId(folderData.id)
-  //   }
-  // }, [folderData]);
 
   return (
     <Window
@@ -379,7 +287,7 @@ function FileBrowser(
       minHeight={400}
     >
       <div className="w-full h-full flex flex-col">
-        <TopBar folderData={folderData} setFolderData={setFolderData} onSetFolderId={setCurrentFolderId} />
+        <NavigationBar folderData={folderData} setFolderData={setFolderData} onSetFolderId={setCurrentFolderId} />
         <FileList 
           currentFolderId={currentFolderId} 
           setCurrentFolderId={setCurrentFolderId} 

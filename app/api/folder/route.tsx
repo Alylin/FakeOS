@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const data = await prisma.folder.create({
     data: {
       displayName: requestData.folderName,
-      path: `${data1.path}${requestData.folderName}/`,
+      // path: `${data1.path}${requestData.folderName}/`,
       parentId: requestData.parentId
     }
   });

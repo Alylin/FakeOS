@@ -4,9 +4,9 @@ import Window from "../../os/windows/window";
 import { closeWindow, NewWindow, WindowInstance } from "../../os/windows/windowmanager";
 import Canvas from "./canvas/canvas";
 import MenuBar from "@/app/os/windows/menubar";
-import roundBrush from "./canvas/tools/brushes/roundbrush";
-import { Tool } from "./canvas/tools/tool";
-import { cloneImage } from "./canvas/utility";
+import roundBrush from "./tools/brushes/roundbrush";
+import { Tool } from "./tools/tool";
+import { cloneImage } from "./utility";
 import { arcticFortress, blackAndWhite, one, pride, winterberry } from "./palettes";
 import { ColorPalette, ToolBar } from "./toolbar";
 
@@ -115,9 +115,7 @@ function getBlankCanvas(canvasSize: Size) {
   const dataArray = new Uint8ClampedArray(canvasSize.width*canvasSize.height*4);
   dataArray.forEach((ignore, index) => {
     // set the A in RGBA to be maxed out.
-    if (index % 4 === 0) {
-      dataArray[index] = 255;
-    }
+    dataArray[index] = 255;
   });
   return new ImageData(dataArray, canvasSize.width, canvasSize.height);
 } 
@@ -142,7 +140,7 @@ export default function PiArt2D(
   const [tool, setTool] = useState<Tool>(roundBrush);
   const [pushState, undo, redo] = useUndo<ImageData>();
   const [imageData, setImageData] = useState<ImageData>(() => {
-    return getBlankCanvas(size)
+    return getBlankCanvas(size);
   });
   const [workingLayer, setWorkingLayer] = useState<ImageData>(() => {
     return new ImageData(size.width, size.height)
@@ -176,7 +174,7 @@ export default function PiArt2D(
                 title: 'New',
                 shortcut: 'Ctrl+N',
                 onClick: () => {
-                  
+                  setImageData(getBlankCanvas(size));
                 }
               },
               {
@@ -285,7 +283,7 @@ export default function PiArt2D(
             <ToolBar
               brushRadius={brushRadius}
               onBrushRadiusChange={setBrushRadius}
-              tool={tool}
+              currentTool={tool}
               onToolChange={setTool}
             />
             <div className="flex-1 overflow-auto">

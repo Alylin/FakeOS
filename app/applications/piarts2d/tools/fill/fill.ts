@@ -107,6 +107,8 @@ function fill(
 }
 
 const fillTool: Tool = {
+  id: 'fill',
+  displayName: 'FILL',
   onMouseMove: () => {
     // no-op
   },

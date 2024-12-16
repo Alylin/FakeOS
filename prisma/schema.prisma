@@ -10,7 +10,7 @@ datasource db {
 model Folder {
   id              Int       @id @default(autoincrement())
   displayName     String
-  path            String    
+  // path            String    
   createdAt       DateTime  @default(now())
   lastUpdatedTime DateTime  @updatedAt
   parentId        Int?

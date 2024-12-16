@@ -1,12 +1,7 @@
 import { Position } from "@/app/utility/position";
-import { Size } from "@/app/utility/size";
-import { cloneImage, getPointIndex, setPixelColor, getPixelsBetweenPoints } from "../../../utility";
+import { cloneImage, setPixelColor, getPixelsBetweenPoints } from "../../../utility";
+import { previewBrush } from "../../brushpreview";
 import { Tool } from "../../tool";
-
-
-
-
-
 
 export function getPointsBetweenPoints(point1: Position, point2: Position) {
   const verticalDistance = point2.y - point1.y;
@@ -54,10 +49,6 @@ function paintLineOrPoint(
   return image;
 }
 
-function animateDrippies() {
-  
-}
-
 function paintDrippyLine(
   point1: Position, 
   hexColor: string,
@@ -92,13 +83,26 @@ function paint(
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
   workingLayer: ImageData,
   imageData: ImageData,
+  isMouseDown: boolean,
   saveToUndoStack?: boolean
 ) {
+  if (isMouseDown) {
     const image = paintDrippyLine(logicalPoint, hexColor, previousPoint, workingLayer);
     onChange(image, saveToUndoStack || false);
+  }
+  else {
+    onChange(previewBrush(
+      logicalPoint,
+      radius,
+      imageData,
+      workingLayer
+    ), false);
+  }
 };
 
 const drippyBrush: Tool = {
+  id: 'drippyBrush',
+  displayName: 'DRIP',
   onMouseMove: paint,
   onMouseDown: paint,
   onMouseUp: (
@@ -110,7 +114,7 @@ const drippyBrush: Tool = {
     workingLayer: ImageData,
     imageData: ImageData
   ) => {
-    paint(logicalPoint, previousPoint, hexColor, radius, onChange, workingLayer, imageData, true);
+    paint(logicalPoint, previousPoint, hexColor, radius, onChange, workingLayer, imageData, true, true);
   }
 }
 

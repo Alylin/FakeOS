@@ -5,7 +5,7 @@ import { Size } from "../../utility/size";
 import { getNotepadData } from "../../applications/notepad/notepad";
 import { WindowInstance, openWindow } from "../windows/windowmanager";
 import ShortCut from "./shortcut";
-import { getFileBrowserData } from "@/app/applications/filebrowser/filebrowser";
+import { getFileBrowserData } from "@/app/applications/filebrowser/ui/filebrowser";
 import { getMrUglyData } from "@/app/applications/mrugly/mainpage";
 import { getPiArt2DData } from "@/app/applications/piarts2d/mainpage";
 

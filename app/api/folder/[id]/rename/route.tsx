@@ -34,7 +34,7 @@ export async function POST(
   await prisma.folder.update({
     data: {
       displayName: requestData.displayName,
-      path: `${parentData.path}${requestData.displayName}/`
+      // path: `${parentData.path}${requestData.displayName}/`
     },
     where: {
       id: id

@@ -9,10 +9,13 @@ type ToolFunction =
     radius: number,
     onChange: (workingLayer: ImageData, saveToUndoStack: boolean) => void,
     workingLayer: ImageData,
-    imageData: ImageData
+    imageData: ImageData,
+    isMouseDown: boolean
   ) => void
 
 export type Tool = {
+  id: string,
+  displayName: string,
   onMouseUp: ToolFunction,
   onMouseDown: ToolFunction,
   onMouseMove: ToolFunction

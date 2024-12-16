@@ -11,7 +11,7 @@ export async function POST(
       children: true
     },
     where: {
-      path: requestData.path
+      // path: requestData.path
     }
   });
   return NextResponse.json({ data });

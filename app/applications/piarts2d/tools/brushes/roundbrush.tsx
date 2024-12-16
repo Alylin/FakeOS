@@ -1,5 +1,6 @@
 import { Position } from "@/app/utility/position";
 import { cloneImage, getPixelsBetweenPoints, setPixelColor } from "../../utility";
+import { previewBrush } from "../brushpreview";
 import { Tool } from "../tool";
 
 function paintLineOrPoint(
@@ -30,13 +31,26 @@ function paint(
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
   workingLayer: ImageData,
   imageData: ImageData,
+  isMouseDown: boolean,
   saveToUndoStack?: boolean
 ) {
+  if (isMouseDown) {
     const image = paintLineOrPoint(radius, logicalPoint, hexColor, previousPoint, workingLayer);
     onChange(image, saveToUndoStack || false);
+  }
+  else {
+    onChange(previewBrush(
+      logicalPoint,
+      radius,
+      imageData,
+      workingLayer
+    ), false);
+  }
 };
 
 const roundBrush: Tool = {
+  id: 'roundBrush',
+  displayName: 'PEN',
   onMouseMove: paint,
   onMouseDown: paint,
   onMouseUp: (
@@ -48,7 +62,7 @@ const roundBrush: Tool = {
     workingLayer: ImageData,
     imageData: ImageData
   ) => {
-    paint(logicalPoint, previousPoint, hexColor, radius, onChange, workingLayer, imageData, true);
+    paint(logicalPoint, previousPoint, hexColor, radius, onChange, workingLayer, imageData, true, true);
   }
 }
 
