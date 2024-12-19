@@ -3,7 +3,7 @@ import { Size } from "@/app/utility/size";
 
 export function getPointIndex(position: Position, imageSize: Size) {
   if (!Number.isInteger(position.x) || !Number.isInteger(position.y)) {
-    throw new Error(`Is not a valid pixel position! (x:${position.x}, y:${position.y})`);
+    throw new Error(`Invalid pixel position! (x:${position.x}, y:${position.y})`);
   }
   if (
     position.x > imageSize.width || 
@@ -87,14 +87,14 @@ function hexToDec(hex: string) {
   return Number(`0x${hex}`);
 }
 
-type RGBA = [number, number, number, number];
+export type RGBA = [number, number, number, number];
 
-export function hexToRGBA(hexCode: string): RGBA {
+export function hexToRGBA(hexCode: string, alpha: number = 255): RGBA {
   return [
     hexToDec(hexCode.substring(1,3)),
     hexToDec(hexCode.substring(3,5)),
     hexToDec(hexCode.substring(5,7)),
-    255
+    alpha
   ];
 }
 
@@ -102,8 +102,8 @@ export function isColorDark(rgba: RGBA) {
   return (rgba[0] + (rgba[1] * 1.2) + (rgba[2] * 0.90) + rgba[3]) < 550;
 }
 
-export function setPixelColor(image: ImageData, pixelIndex: number, hexCode: string) {
-  const rgba = hexToRGBA(hexCode);
+export function setPixelColor(image: ImageData, pixelIndex: number, hexCode: string, alpha?: number) {
+  const rgba = hexToRGBA(hexCode, alpha);
   image.data.set(rgba, pixelIndex);
 }
 
@@ -124,4 +124,57 @@ export function getLogicalPosition(
     x: Math.floor((event.clientX - canvasBounds.left) / zoomLevel),
     y: Math.floor((event.clientY - canvasBounds.top) / zoomLevel)
   };
+}
+
+function weightedAverage(
+  number1: number, 
+  weight1: number, 
+  number2: number, 
+  weight2: number
+) {
+  return (number1 * weight1) + (number2 * weight2);
+}
+
+export function mergeImages(images: ImageData[]) {
+  let newImageData: Uint8ClampedArray = new Uint8ClampedArray(images[0].data.length);
+  for (let imageID = 0; imageID < images.length; imageID++) {
+    const imageData = images[imageID].data;
+    for (let i = 0; i < imageData.length; i += 4) {
+      const color1Alpha = newImageData[i+3];
+      const color2Alpha = imageData[i+3];
+
+      const index1 = i;
+      const index2 = i + 1;
+      const index3 = i + 2;
+      const index4 = i + 3;
+    
+      if (color1Alpha === 0 || color2Alpha === 255) {
+        newImageData[index1] = imageData[index1];
+        newImageData[index2] = imageData[index2];
+        newImageData[index3] = imageData[index3];
+        newImageData[index4] = imageData[index4];
+      }
+      else if (color2Alpha === 0) {
+        newImageData[index1] = newImageData[index1];
+        newImageData[index2] = newImageData[index2];
+        newImageData[index3] = newImageData[index3];
+        newImageData[index4] = newImageData[index4];
+      }
+      else {
+        const color1Weight = color1Alpha / Math.min(color1Alpha + color2Alpha) || 0;
+        const color2Weight = (1 - color1Weight)*255;
+        
+        newImageData[index1] = weightedAverage(newImageData[index1], color1Weight, imageData[index1], color2Weight);
+        newImageData[index2] = weightedAverage(newImageData[index2], color1Weight, imageData[index2], color2Weight);
+        newImageData[index3] = weightedAverage(newImageData[index3], color1Weight, imageData[index3], color2Weight);
+        newImageData[index4] = 255; // test108 this is just wrong
+      }
+    }
+  }
+  
+  return new ImageData(
+    newImageData,
+    images[0].width,
+    images[0].height
+  );
 }

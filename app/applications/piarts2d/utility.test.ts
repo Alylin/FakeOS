@@ -1,5 +1,5 @@
 import {describe, expect, test} from '@jest/globals';
-import { distanceBetweenPoints } from './utility';
+import { distanceBetweenPoints, getPointIndex } from './utility';
 
 describe('utility', () => {
   describe('distanceBetweenPoints', () => {
@@ -26,11 +26,11 @@ describe('utility', () => {
 
   describe('getPointIndex', () => {
     test('throws an error when non-integer coordinates are given', () => {
-
+      expect(() => getPointIndex({x: 0, y: 0.6}, { width: 100, height: 1000})).toThrowError(new Error('Invalid pixel position! (x:0, y:0.6)'));
     });
 
-    test('returns null if the coordinate it outside the image\'s range', () => {
-
+    test('returns null if the coordinate it outside the bounds', () => {
+      expect(getPointIndex({x: 0, y: 1001}, { width: 100, height: 1000})).toBeNull();
     });
 
     test('returns the correct index', () => {

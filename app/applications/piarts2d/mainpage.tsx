@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Size } from "../../utility/size";
 import Window from "../../os/windows/window";
-import { closeWindow, NewWindow, WindowInstance } from "../../os/windows/windowmanager";
-import Canvas from "./canvas/canvas";
+import { NewWindow, WindowInstance } from "../../os/windows/windowmanager";
 import MenuBar from "@/app/os/windows/menubar";
 import roundBrush from "./tools/brushes/roundbrush";
 import { Tool } from "./tools/tool";
-import { cloneImage } from "./utility";
-import { arcticFortress, blackAndWhite, one, pride, winterberry } from "./palettes";
+import { cloneImage, mergeImages } from "./utility";
+import { arcticFortress, blackAndWhite, one, winterberry } from "./palettes";
 import { ColorPalette, ToolBar } from "./toolbar";
-
-
+import DrawingCanvas from "./canvas/drawingcanvas";
 
 function tempSave(imageData: ImageData) {
     const canvas = document.createElement('canvas');
@@ -38,30 +36,6 @@ function tempSave(imageData: ImageData) {
     element.click();
   
     document.body.removeChild(element);
-}
-
-function mergeImage(image1: ImageData, image2: ImageData) {
-  let newImageData: Uint8ClampedArray = new Uint8ClampedArray(image1.data.length);
-  for (let i = 0; i < image1.data.length; i += 4) {
-    if (image2.data[i+3] > 0) {
-      newImageData[i] = image2.data[i];
-      newImageData[i+1] = image2.data[i+1];
-      newImageData[i+2] = image2.data[i+2];
-      newImageData[i+3] = image2.data[i+3];
-    }
-    else {
-      newImageData[i] = image1.data[i];
-      newImageData[i+1] = image1.data[i+1];
-      newImageData[i+2] = image1.data[i+2];
-      newImageData[i+3] = image1.data[i+3];
-    }
-  }
-
-  return new ImageData(
-    newImageData,
-    image1.width,
-    image1.height
-  );
 }
 
 function useUndo<Type = undefined>(maxUndoCount: number = 1000): [(value: Type) => void, (value: Type | null) => Type | undefined, (value: Type | null) => Type | undefined] {
@@ -143,6 +117,12 @@ export default function PiArt2D(
     return getBlankCanvas(size);
   });
   const [workingLayer, setWorkingLayer] = useState<ImageData>(() => {
+    return new ImageData(size.width, size.height)
+  });
+  const [overlayLayer, setOverlayLayer] = useState<ImageData>(() => {
+    return new ImageData(size.width, size.height)
+  });
+  const [backgroundLayer, setBackgroundLayer] = useState<ImageData>(() => {
     return new ImageData(size.width, size.height)
   });
   const [palette, setPalette] = useState(one);
@@ -257,13 +237,6 @@ export default function PiArt2D(
                 onClick: () => {
                   setPalette(arcticFortress);
                 }
-              },
-              {
-                title: 'Pride',
-                shortcut: '',
-                onClick: () => {
-                  setPalette(pride);
-                }
               }
             ]
           },
@@ -287,13 +260,13 @@ export default function PiArt2D(
               onToolChange={setTool}
             />
             <div className="flex-1 overflow-auto">
-              <Canvas 
+              <DrawingCanvas 
                 zoomLevel={zoom} 
                 radius={brushRadius} 
                 color={color} 
                 tool={tool} 
                 onChange={(workingLayer) => {
-                  const newImageData = mergeImage(imageData, workingLayer);
+                  const newImageData = mergeImages([imageData, workingLayer]);
                   setWorkingLayer(new ImageData(size.width, size.height));
                   pushState(cloneImage(imageData)); 
                   setImageData(cloneImage(newImageData));
@@ -301,8 +274,12 @@ export default function PiArt2D(
                 onTemporaryChange={(newImageData) => {
                   setWorkingLayer(newImageData);
                 }}
+                onOverlayChange={(newImageData) => {
+                  setOverlayLayer(newImageData)
+                }}
                 imageData={imageData}
                 workingLayer={workingLayer}
+                overlayLayer={overlayLayer}
                 size={size}
               />
               <div className="absolute bottom-2 right-2">

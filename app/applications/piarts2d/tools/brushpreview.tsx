@@ -30,7 +30,7 @@ function paintCircle(
 ) {
   const image = new ImageData(workingLayer.width, workingLayer.height);
   const points = getPixelsOnRadius(point, lineWidth)
-  points.forEach((point: Position) => { // [JANK] :any is a jank hack to make ts not recognize what the filter is doing. 
+  points.forEach((point: Position) => { 
     const index = getPointIndex(point, workingLayer);
     if (index !== null) {
       const hexColor = isColorDark([
@@ -39,7 +39,7 @@ function paintCircle(
         imageData.data[index+2],
         imageData.data[index+3]
       ]) ? '#ffffff' : '#000000';
-      setPixelColor(image, index, hexColor);
+      setPixelColor(image, index, hexColor, 155);
     }
   });
   return image;

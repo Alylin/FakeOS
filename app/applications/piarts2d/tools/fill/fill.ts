@@ -33,6 +33,7 @@ function fill(
   hexColor: string,
   radius: number,
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+  onOverlayChange: (workingLayer: ImageData) => void,
   workingLayer: ImageData,
   imageData: ImageData
 ) {

@@ -29,22 +29,24 @@ function paint(
   hexColor: string,
   radius: number,
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+  onOverlayChange: (workingLayer: ImageData) => void,
   workingLayer: ImageData,
   imageData: ImageData,
   isMouseDown: boolean,
   saveToUndoStack?: boolean
 ) {
   if (isMouseDown) {
+    onOverlayChange(new ImageData(workingLayer.width, workingLayer.height));
     const image = paintLineOrPoint(radius, logicalPoint, hexColor, previousPoint, workingLayer);
     onChange(image, saveToUndoStack || false);
   }
   else {
-    onChange(previewBrush(
+    onOverlayChange(previewBrush(
       logicalPoint,
       radius,
       imageData,
       workingLayer
-    ), false);
+    ));
   }
 };
 
@@ -59,10 +61,11 @@ const roundBrush: Tool = {
     hexColor: string,
     radius: number,
     onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+    onOverlayChange: (workingLayer: ImageData) => void,
     workingLayer: ImageData,
     imageData: ImageData
   ) => {
-    paint(logicalPoint, previousPoint, hexColor, radius, onChange, workingLayer, imageData, true, true);
+    paint(logicalPoint, previousPoint, hexColor, radius, onChange, onOverlayChange, workingLayer, imageData, true, true);
   }
 }
 

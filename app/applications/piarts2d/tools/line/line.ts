@@ -30,23 +30,24 @@ function paint(
   hexColor: string,
   radius: number,
   onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+  onOverlayChange: (workingLayer: ImageData) => void,
   image: ImageData,
   workingLayer: ImageData,
   saveToUndoStack: boolean
 ) {
   if (point1) {
+    onOverlayChange(new ImageData(workingLayer.width, workingLayer.height));
     const image = paintLineOrPoint(radius, logicalPoint, hexColor, point1, workingLayer);
     onChange(image, saveToUndoStack);
   }
   else {
-    onChange(
+    onOverlayChange(
       previewBrush(
         logicalPoint,
         radius,
         image,
         workingLayer
-      ), 
-      false
+      )
     );
   }
 };
@@ -60,6 +61,7 @@ const line: Tool = {
     hexColor: string,
     radius: number,
     onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+    onOverlayChange: (workingLayer: ImageData) => void,
     workingLayer: ImageData,
     imageData: ImageData
   ) => {
@@ -68,6 +70,7 @@ const line: Tool = {
       hexColor,
       radius,
       onChange,
+      onOverlayChange,
       imageData,
       workingLayer,
       false
@@ -82,6 +85,7 @@ const line: Tool = {
     hexColor: string,
     radius: number,
     onChange: (imageData: ImageData, saveToUndoStack: boolean) => void,
+    onOverlayChange: (workingLayer: ImageData) => void,
     workingLayer: ImageData,
     imageData: ImageData
   ) => {
@@ -90,6 +94,7 @@ const line: Tool = {
       hexColor,
       radius,
       onChange,
+      onOverlayChange,
       imageData,
       workingLayer,
       true

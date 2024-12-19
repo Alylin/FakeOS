@@ -1,35 +1,11 @@
-import { addGlobalListener } from "@/app/utility/globallistener";
 import { Position } from "@/app/utility/position";
 import { Size } from "@/app/utility/size";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Tool } from "../tools/tool";
 import { getLogicalPosition } from "../utility";
+import LayeredCanvas from "./layeredcanvas";
 
-function mergeImage(image1: ImageData, image2: ImageData) {
-  let newImageData: Uint8ClampedArray = new Uint8ClampedArray(image1.data.length);
-  for (let i = 0; i < image1.data.length; i += 4) {
-    if (image2.data[i+3] > 0) {
-      newImageData[i] = image2.data[i];
-      newImageData[i+1] = image2.data[i+1];
-      newImageData[i+2] = image2.data[i+2];
-      newImageData[i+3] = image2.data[i+3];
-    }
-    else {
-      newImageData[i] = image1.data[i];
-      newImageData[i+1] = image1.data[i+1];
-      newImageData[i+2] = image1.data[i+2];
-      newImageData[i+3] = image1.data[i+3];
-    }
-  }
-
-  return new ImageData(
-    newImageData,
-    image1.width,
-    image1.height
-  );
-}
-
-export default function Canvas({
+export default function DrawingCanvas({
   zoomLevel = 5, 
   size,
   radius,
@@ -37,8 +13,10 @@ export default function Canvas({
   tool,
   imageData,
   workingLayer,
+  overlayLayer,
   onChange,
-  onTemporaryChange
+  onTemporaryChange,
+  onOverlayChange
 }: {
   zoomLevel?: number,
   size: Size,
@@ -47,131 +25,96 @@ export default function Canvas({
   tool: Tool,
   imageData: ImageData,
   workingLayer: ImageData,
+  overlayLayer: ImageData,
   onChange: (imageData: ImageData) => void,
-  onTemporaryChange: (imageData: ImageData) => void
+  onTemporaryChange: (imageData: ImageData) => void,
+  onOverlayChange: (imageData: ImageData) => void
 }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-
   const [isDrawing, setIsDrawing] = useState(false);
   const [previousPoint, setPreviousPoint] = useState<Position | null>(null);
 
-
-  useEffect(() => {
-    if (canvas.current) {
-      const ctx = canvas.current.getContext('2d');
-      if (ctx) {
-        ctx.putImageData(mergeImage(imageData, workingLayer), 0, 0);
-      }
-    }
-  }, [imageData, workingLayer, canvas.current]);
-
-  useEffect(() => {
-    const mouseMovedTeardown = addGlobalListener( // test108 this is a bad way of doing it, having to update every time the previous point changes. Bleh. What is the right way to do this? 
-      'mousemove',
-      (event: MouseEvent) => {
-        if (canvas.current) {
-          const logicalPoint = getLogicalPosition(
-            event, 
-            canvas.current.getBoundingClientRect(), 
-            zoomLevel
-          );
-          tool.onMouseMove(
-            logicalPoint,
-            previousPoint, 
-            color,
-            radius,
-            (workingLayer, commitToCanvas) => {
-              if (commitToCanvas) {
-                onChange(workingLayer);
-                return;
-              }
-              onTemporaryChange(workingLayer);
-            },
-            workingLayer,
-            imageData,
-            isDrawing
-          )
-          setPreviousPoint(logicalPoint);
-        }
-      }
-    );
-    const mouseUpTeardown = addGlobalListener(
-      'mouseup',
-      (event: MouseEvent) => {
-        if (!isDrawing) {
-          return;
-        }
-        if (canvas.current) {
-          const logicalPoint = getLogicalPosition(
-            event, 
-            canvas.current.getBoundingClientRect(), 
-            zoomLevel
-          );
-          tool.onMouseUp(
-            logicalPoint,
-            previousPoint, 
-            color,
-            radius,
-            (workingLayer, commitToCanvas) => {
-              if (commitToCanvas) {
-                onChange(workingLayer);
-                return;
-              }
-              onTemporaryChange(workingLayer);
-            },
-            workingLayer,
-            imageData,
-            isDrawing
-          );
-        }
-        setPreviousPoint(null);
-        setIsDrawing(false);
-      }
-    );
-    return () => {
-      mouseMovedTeardown();
-      mouseUpTeardown();
-    };
-  }, [isDrawing, zoomLevel, previousPoint, radius, tool]);
-
   return (
-    <canvas
-      className="bg-white"
-      width={size.width}
-      height={size.height}
-      style={{
-        imageRendering: '-moz-crisp-edges',
-        width: `${size.width*zoomLevel}px`,
-        height: `${size.height*zoomLevel}px`
-      }}
-      ref={canvas}
-      onMouseDown={(event) => {
+    <LayeredCanvas
+      size={size}
+      zoomLevel={zoomLevel}
+      layers={[imageData, workingLayer, overlayLayer]}
+      onMouseDown={(event: React.MouseEvent, canvas: HTMLCanvasElement) => {
         window.requestAnimationFrame(() => {
-          if (canvas.current) {
-            const logicalPoint = getLogicalPosition(
-              event, 
-              canvas.current.getBoundingClientRect(), 
-              zoomLevel
-            );
-            tool.onMouseDown(
-              logicalPoint,
-              previousPoint, 
-              color,
-              radius,
-              (workingLayer, commitToCanvas) => {
-                if (commitToCanvas) {
-                  onChange(workingLayer);
-                  return;
-                }
-                onTemporaryChange(workingLayer);
-              },
-              workingLayer,
-              imageData,
-              isDrawing
-            )
-          }
+          const logicalPoint = getLogicalPosition(
+            event, 
+            canvas.getBoundingClientRect(), 
+            zoomLevel
+          );
+          tool.onMouseDown(
+            logicalPoint,
+            previousPoint, 
+            color,
+            radius,
+            (workingLayer, commitToCanvas) => {
+              if (commitToCanvas) {
+                onChange(workingLayer);
+                return;
+              }
+              onTemporaryChange(workingLayer);
+            },
+            onOverlayChange,
+            workingLayer,
+            imageData,
+            isDrawing
+          );
         });
         setIsDrawing(true);
+      }}
+      onMouseMove={(event: React.MouseEvent, canvas: HTMLCanvasElement) => {
+        const logicalPoint = getLogicalPosition(
+          event, 
+          canvas.getBoundingClientRect(), 
+          zoomLevel
+        );
+        tool.onMouseMove(
+          logicalPoint,
+          previousPoint, 
+          color,
+          radius,
+          (workingLayer, commitToCanvas) => {
+            if (commitToCanvas) {
+              onChange(workingLayer);
+              return;
+            }
+            onTemporaryChange(workingLayer);
+          },
+          onOverlayChange,
+          workingLayer,
+          imageData,
+          isDrawing
+        )
+        setPreviousPoint(logicalPoint);
+      }}
+      onMouseUp={(event: React.MouseEvent, canvas: HTMLCanvasElement) => {
+        const logicalPoint = getLogicalPosition(
+          event, 
+          canvas.getBoundingClientRect(), 
+          zoomLevel
+        );
+        tool.onMouseUp(
+          logicalPoint,
+          previousPoint, 
+          color,
+          radius,
+          (workingLayer, commitToCanvas) => {
+            if (commitToCanvas) {
+              onChange(workingLayer);
+              return;
+            }
+            onTemporaryChange(workingLayer);
+          },
+          onOverlayChange,
+          workingLayer,
+          imageData,
+          isDrawing
+        );
+        setPreviousPoint(null);
+        setIsDrawing(false);
       }}
     />
   );

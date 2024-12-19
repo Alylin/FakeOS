@@ -8,6 +8,7 @@ type ToolFunction =
     hexColor: string,
     radius: number,
     onChange: (workingLayer: ImageData, saveToUndoStack: boolean) => void,
+    onOverlayChange: (workingLayer: ImageData) => void,
     workingLayer: ImageData,
     imageData: ImageData,
     isMouseDown: boolean
